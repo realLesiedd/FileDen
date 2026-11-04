@@ -1,0 +1,48 @@
+{
+  "addcont": {
+    "serviceIdForSharing": [
+      "                   ",
+      "                   ",
+      "                   ",
+      "                   ",
+      "                   ",
+      "                   ",
+      "                   "
+    ]
+  },
+  "ageLevel": {
+    "default": 0
+  },
+  "applicationCategoryType": 0,
+  "applicationDrmType": "free",
+  "attribute": 0,
+  "attribute2": 0,
+  "attribute3": 0,
+  "conceptId": "99923",
+  "contentBadgeType": 1,
+  "contentId": "UP0000-PPSA99923_00-0000000000000000",
+  "contentVersion": "00.000.001",
+  "downloadDataSize": 0,
+  "gameIntent": {
+    "permittedIntents": [
+      {
+        "intentType": "launchActivity"
+      }
+    ]
+  },
+  "localizedParameters": {
+    "defaultLanguage": "en-US",
+    "en-US": {
+      "titleName": "FileDen"
+    }
+  },
+  "masterVersion": "01.00",
+  "pubtools": {
+    "creationDate": "2026-11-02 00:00:00",
+    "toolVersion": "2.00"
+  },
+  "requiredSystemSoftwareVersion": "0x0200000000000000",
+  "sdkVersion": "0x0200000000000000",
+  "titleId": "PPSA99923",
+  "versionFileUri": ""
+}

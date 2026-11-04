@@ -1,0 +1,11 @@
+name: Idea
+description: Something FileDen could do
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: The idea
+      description: What you'd like to do, and where (TV, web UI or both)
+    validations:
+      required: true

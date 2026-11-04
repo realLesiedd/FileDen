@@ -1,0 +1,68 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    env:
+      PS5_PAYLOAD_SDK: ${{ github.workspace }}/.sdk/ps5-payload-sdk
+      WORK: ${{ github.workspace }}/.fself
+      LLVM_CONFIG: /usr/bin/llvm-config-18 # absolute: the SDK resolves it with readlink -f
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-18 lld-18 llvm-18 cmake make ninja-build python3 unzip libssl-dev libzstd-dev liblzma-dev libbz2-dev zlib1g-dev
+
+      - name: Host tests
+        run: |
+          LIBS="third_party/miniz/miniz.c $(ls third_party/lzma/*.c | tr '\n' ' ')"
+          DEFS="-DZ7_ST -DZ7_PPMD_SUPPORT -Ithird_party/lzma"
+          LA="$(tools/host-libarchive.sh)" # the vendored libarchive, with OpenSSL (ZIP passwords)
+          cc $DEFS -O2 tests/test_fsops.c fsops.c archive.c rarcrypt.c title.c $LIBS $LA -pthread -o test_fsops
+          ./test_fsops
+          cc $DEFS -O2 tests/test_archives.c fsops.c archive.c rarcrypt.c title.c $LIBS $LA -pthread -o test_archives
+          ./test_archives tests/fixtures
+
+      - name: Web UI is embedded
+        run: |
+          ./embed.sh
+          git diff --exit-code -- index_html.h app/logo.h || { echo "run ./embed.sh and commit"; exit 1; }
+
+      - name: PS5 payload SDK
+        run: |
+          mkdir -p .sdk
+          curl -fsSL -o .sdk/sdk.zip https://github.com/ps5-payload-dev/sdk/releases/latest/download/ps5-payload-sdk.zip
+          unzip -q .sdk/sdk.zip -d .sdk
+
+      - name: Payload
+        run: |
+          tools/fetch-deps.sh
+          "$PS5_PAYLOAD_SDK/bin/prospero-cmake" -B build .
+          make -C build
+
+      - name: App
+        run: |
+          PS5_CLANG=clang-18 app/fself/build.sh build/fileden.elf
+          tools/check-app-imports.sh
+          cp "$WORK/dist/PPSA99923.zip" FileDen-PPSA99923.zip
+          cp build/fileden.elf fileden.elf
+          sha256sum FileDen-PPSA99923.zip fileden.elf | tee SHA256SUMS.txt
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: FileDen-PPSA99923
+          path: |
+            FileDen-PPSA99923.zip
+            fileden.elf
+            SHA256SUMS.txt

@@ -1,0 +1,42 @@
+name: Bug report
+description: Something in FileDen doesn't work as it should
+labels: [bug]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: FileDen version
+      description: Settings › About and controls shows it
+      placeholder: "0.0.1"
+    validations:
+      required: true
+  - type: input
+    id: firmware
+    attributes:
+      label: PS5 firmware, kstuff and ShadowMountPlus versions
+      placeholder: "e.g. 7.61, kstuff 1.6, ShadowMountPlus 1.7"
+    validations:
+      required: true
+  - type: dropdown
+    id: where
+    attributes:
+      label: Where it happened
+      options:
+        - In the app on the PS5
+        - In the web UI (phone or PC)
+        - Both
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what you expected
+      description: The steps to get there, the folder or file type, and any error FileDen showed
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Log
+      description: If the app wouldn't start, paste /data/fileden/app.log
+      render: text

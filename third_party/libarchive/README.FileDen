@@ -1,0 +1,4 @@
+libarchive 3.7.4 (https://github.com/libarchive/libarchive, tag v3.7.4), BSD-2-Clause (COPYING).
+Only the library is vendored: libarchive/*.c / *.h, the top CMakeLists.txt and build/.
+Tests, man pages and the bsdtar / bsdcpio / bsdcat / bsdunzip tools are left out
+(the CMake files skip what isn't there). FileDen changes are marked "FileDen:".
